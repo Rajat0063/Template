@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
     updateTime(); // Call once on load
     setInterval(updateTime, 1000); // Update every second
     setupMobileControls(); // ADDED: Set up D-pad
-
+    
     // --- Initial Setup ---
     resizeCanvas();
     // Don't start game automatically, wait for button press
@@ -33,6 +33,7 @@ const gameContainer = document.getElementById('gameContainer');
 // Get new pause elements
 const pauseButton = document.getElementById('pauseButton');
 const pauseText = document.getElementById('pauseText');
+const dPadContainer = document.getElementById('d-pad-container'); // Get D-Pad
 
 // Game constants
 const tileSize = 20; // 20px per square
@@ -44,7 +45,7 @@ function resizeCanvas() {
     const containerWidth = canvas.parentElement.clientWidth;
     tileCountX = Math.floor(containerWidth / tileSize);
     tileCountY = tileCountX; // Keep it square
-
+    
     canvas.width = tileCountX * tileSize;
     canvas.height = tileCountY * tileSize;
 }
@@ -58,34 +59,38 @@ function initializeGame() {
     snake = [
         { x: Math.floor(tileCountX / 2), y: Math.floor(tileCountY / 2) }
     ];
-
+    
     // Place initial food (MOVED after snake init)
     generateFood();
-
+    
     score = 0;
     scoreElement.textContent = '0';
-
+    
     // Initial direction
     direction = 'right';
     nextDirection = 'right';
-
+    
     gameOver = false;
     isPaused = false; // Reset pause state
-
+    
     // Hide modal
     modal.classList.add('opacity-0', 'invisible');
     // Remove shake effect if it's there
     gameContainer.classList.remove('animate-shake');
-
+    
+    // RE-ENABLE CONTROLS
+    gameContainer.style.pointerEvents = 'auto';
+    dPadContainer.style.pointerEvents = 'auto';
+    
     // Start game loop
     if (gameLoopInterval) clearInterval(gameLoopInterval);
-    gameLoopInterval = setInterval(gameLoop, 100); // Game speed: 100ms
-
+    gameLoopInterval = setInterval(gameLoop, 120); // Game speed: 120ms (slower)
+    
     resetText.textContent = 'Reset';
     // Enable pause button
     pauseButton.disabled = false;
     pauseText.textContent = 'Pause';
-
+    
     // Check if lucide is loaded
     if (typeof lucide !== 'undefined') {
         // Remove the old icon (which is likely an svg)
@@ -105,15 +110,14 @@ function gameLoop() {
         clearInterval(gameLoopInterval);
         finalScoreElement.textContent = score;
         modal.classList.remove('opacity-0', 'invisible');
-
+        
         // --- Enhancements ---
         // 1. Add shake animation
         gameContainer.classList.add('animate-shake');
-
+        
         // DISABLE CONTROLS
         gameContainer.style.pointerEvents = 'none';
         dPadContainer.style.pointerEvents = 'none';
-        // ...
         
         // 2. Play sound
         try {
@@ -124,7 +128,7 @@ function gameLoop() {
                 const synth = new Tone.Synth().toDestination();
                 synth.triggerAttackRelease("C2", "8n", Tone.now());
             }
-        } catch (e) {
+        } catch(e) {
             console.error('Audio context error:', e);
         }
         // 3. Reset main button text
@@ -133,7 +137,7 @@ function gameLoop() {
         pauseButton.disabled = true;
         isPaused = false;
         pauseText.textContent = 'Pause';
-
+        
         // Check if lucide is loaded
         if (typeof lucide !== 'undefined') {
             // Remove the old icon (which is likely an svg)
@@ -145,7 +149,7 @@ function gameLoop() {
             pauseButton.prepend(pauseIconEl);
             lucide.createIcons();
         }
-
+        
         return;
     }
 
@@ -218,28 +222,28 @@ function draw() {
     // Draw food (red-500)
     ctx.fillStyle = '#ef4444';
     ctx.fillRect(food.x * tileSize, food.y * tileSize, tileSize - 2, tileSize - 2);
-
+    
     // Draw grid lines (optional, but looks cool)
     ctx.strokeStyle = '#1f2937'; // gray-800
     ctx.lineWidth = 1;
-    for (let i = 0; i <= tileCountX; i++) {
+    for(let i = 0; i <= tileCountX; i++) {
         ctx.beginPath();
         ctx.moveTo(i * tileSize, 0);
         ctx.lineTo(i * tileSize, canvas.height);
         ctx.stroke();
     }
-    for (let j = 0; j <= tileCountY; j++) {
+    for(let j = 0; j <= tileCountY; j++) {
         ctx.beginPath();
         ctx.moveTo(0, j * tileSize);
         ctx.lineTo(canvas.width, j * tileSize);
         ctx.stroke();
     }
-
+    
     // --- Draw PAUSED overlay ---
     if (isPaused) {
         ctx.fillStyle = 'rgba(17, 24, 39, 0.75)'; // gray-900 with 75% opacity
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+        
         ctx.fillStyle = 'white';
         ctx.font = 'bold 40px "Source Code Pro"';
         ctx.textAlign = 'center';
@@ -256,9 +260,9 @@ function generateFood() {
             x: Math.floor(Math.random() * tileCountX),
             y: Math.floor(Math.random() * tileCountY)
         };
-        // Keep generating until food is not on the snake
+    // Keep generating until food is not on the snake
     } while (snake && snake.some(segment => segment.x === newFoodPosition.x && segment.y === newFoodPosition.y)); // Added snake check
-
+    
     food = newFoodPosition;
 }
 
@@ -279,17 +283,17 @@ function togglePause() {
     if (gameOver || resetText.textContent === 'Start') {
         return;
     }
-
+    
     isPaused = !isPaused;
-
+    
     if (isPaused) {
         // Pause the game (MODIFIED: remove interval clearing)
         // clearInterval(gameLoopInterval);
         // gameLoopInterval = null; // Clear interval ID
-
+        
         // Update button
         pauseText.textContent = 'Resume';
-
+        
         if (typeof lucide !== 'undefined') {
             // Remove the old icon (which is likely an svg)
             pauseButton.querySelector('svg')?.remove();
@@ -299,16 +303,16 @@ function togglePause() {
             playIconEl.setAttribute('class', 'w-4 h-4');
             pauseButton.prepend(playIconEl);
         }
-
+        
         // Redraw canvas to show "PAUSED" text
         draw();
     } else {
         // Resume the game (MODIFIED: remove interval setting)
         // gameLoopInterval = setInterval(gameLoop, 100);
-
+        
         // Update button
         pauseText.textContent = 'Pause';
-
+        
         if (typeof lucide !== 'undefined') {
             // Remove the old icon (which is likely an svg)
             pauseButton.querySelector('svg')?.remove();
@@ -359,13 +363,15 @@ function setupMobileControls() {
 
 // Keyboard controls (UPDATED)
 document.addEventListener('keydown', e => {
+    if (gameOver) return; // <-- ADDED: Disable keyboard if game is over
+
     // Add spacebar to toggle pause
     if (e.key === ' ' || e.code === 'Space') {
         e.preventDefault(); // Prevent page scroll
         togglePause();
         return;
     }
-
+    
     // Add WASD controls
     switch (e.key) {
         case 'ArrowUp':
@@ -387,7 +393,7 @@ document.addEventListener('keydown', e => {
     }
     // Prevent page scrolling with arrow keys
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-        e.preventDefault();
+        e.preventDefault(); 
     }
 });
 
@@ -402,13 +408,13 @@ document.addEventListener('touchstart', e => {
 
 document.addEventListener('touchmove', e => {
     if (e.touches.length === 0) return;
-
+    
     const touchEndX = e.touches[0].clientX;
     const touchEndY = e.touches[0].clientY;
-
+    
     const dx = touchEndX - touchStartX;
     const dy = touchEndY - touchStartY;
-
+    
     const minSwipeDist = 20; // Minimum distance to register as swipe
 
     // Check which direction has more movement
@@ -445,6 +451,10 @@ modalResetButton.addEventListener('click', initializeGame);
 // New modal quit button
 modalQuitButton.addEventListener('click', () => {
     modal.classList.add('opacity-0', 'invisible');
+    
+    // RE-ENABLE CONTROLS
+    gameContainer.style.pointerEvents = 'auto';
+    dPadContainer.style.pointerEvents = 'auto';
 });
 // New pause button
 pauseButton.addEventListener('click', togglePause);
@@ -454,7 +464,7 @@ window.addEventListener('resize', () => {
     resizeCanvas();
     // Re-draw immediately after resize
     // Add check for snake being initialized
-    if (!gameOver && snake) {
+    if(!gameOver && snake) {
         draw();
     } else if (!snake) { // If game hasn't started, just draw the empty state
         ctx.fillStyle = '#111827';
