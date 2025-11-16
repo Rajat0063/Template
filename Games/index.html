@@ -43,19 +43,20 @@
                 <p>Use [Arrows] or [WASD]</p>
                 <p>Use [Swipe] or [D-Pad]</p>
                 <p>[Space] to Pause</p>
-                <!-- RE-ADDED CREDIT LINE -->
-                <p class="mt-2 text-emerald-400">&gt; A game by Code Artistry</p>
+                <!-- RE-REMOVED CREDIT LINE -->
+                <!-- <p class="mt-2 text-emerald-400">&gt; A game by Code Artistry</p> -->
             </div>
             
             <!-- This DIV is MODIFIED to be fixed on mobile -->
-            <div class="flex items-center gap-2 
-                        md:relative md:left-auto md:bottom-auto md:right-auto md:translate-x-0
+            <div class="flex flex-col items-center gap-2 <!-- Stack buttons vertically -->
+                        md:relative md:flex-row <!-- Reset to horizontal for desktop -->
+                        md:left-auto md:bottom-auto md:right-auto md:translate-x-0
                         fixed bottom-4 left-1/2 translate-x-[0.5rem] z-10">
-                <button id="pauseButton" class="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-500 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <button id="pauseButton" class="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-500 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed w-full"> <!-- Added w-full -->
                     <i data-lucide="pause" class="w-4 h-4"></i>
                     <span id="pauseText">Pause</span>
                 </button>
-                <button id="resetButton" class="px-5 py-2 bg-emerald-500 text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-emerald-400 transition-colors duration-200 flex items-center gap-2">
+                <button id="resetButton" class="px-5 py-2 bg-emerald-500 text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-emerald-400 transition-colors duration-200 flex items-center gap-2 w-full"> <!-- Added w-full -->
                     <i data-lucide="rotate-cw" class="w-4 h-4"></i>
                     <span id="resetText">Start</span>
                 </button>
@@ -70,8 +71,8 @@
             <h2 class="text-3xl font-bold text-red-500 font-mono">GAME OVER</h2>
             <p class="text-lg mt-2">Your final score was: <span id="finalScore" class="font-bold text-white">0</span></p>
             
-            <!-- CREDIT LINE REMOVED FROM HERE -->
-            <!-- <p class="text-sm mt-4 text-emerald-400 font-mono">&gt; A game by Code Artistry &lt;</p> -->
+            <!-- CREDIT LINE RE-ADDED HERE -->
+            <p class="text-sm mt-4 text-emerald-400 font-mono">&gt; A game by Code Artistry &lt;</p> 
             
             <p class="text-sm mt-4 text-gray-400">Press the button to play again.</p>
             <!-- New button inside the modal -->
