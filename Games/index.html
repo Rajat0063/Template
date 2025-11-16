@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Retro Snake Game</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font & a Monospace font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Load Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <!-- Load Tone.js for sound -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    
+    <!-- Link to the new CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="relative min-h-screen flex items-center justify-center bg-gray-900 text-gray-200 p-4">
+
+    <div class="w-full max-w-md mx-auto" id="gameContainer">
+        <!-- Header: Title and Score -->
+        <div class="flex justify-between items-center mb-4 px-2">
+            <div>
+                <h1 class="text-2xl font-bold text-emerald-400 font-mono">&gt; SNAKE_GAME</h1>
+                <p id="currentTime" class="text-xs font-mono text-gray-500"></p>
+            </div>
+            <div class="text-right">
+                <span class="text-sm text-gray-400 block">SCORE</span>
+                <span id="score" class="text-3xl font-bold text-white">0</span>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas" class="w-full"></canvas>
+
+        <!-- Instructions & Controls -->
+        <div class="flex justify-between items-center mt-4 text-gray-400">
+            <!-- UPDATED Instructions -->
+            <div class="text-xs font-mono">
+                <p>Use [Arrows] or [WASD]</p>
+                <p>Use [Swipe] or [D-Pad]</p>
+                <p>[Space] to Pause</p>
+            </div>
+            
+            <!-- This DIV is MODIFIED to be fixed on mobile -->
+            <div class="flex items-center gap-2 md:relative fixed bottom-4 right-4 z-10">
+                <button id="pauseButton" class="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-500 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <i data-lucide="pause" class="w-4 h-4"></i>
+                    <span id="pauseText">Pause</span>
+                </button>
+                <button id="resetButton" class="px-5 py-2 bg-emerald-500 text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-emerald-400 transition-colors duration-200 flex items-center gap-2">
+                    <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+                    <span id="resetText">Start</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal absolute inset-0 w-full h-full flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 invisible">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-2xl border border-gray-700 text-center">
+            <h2 class="text-3xl font-bold text-red-500 font-mono">GAME OVER</h2>
+            <p class="text-lg mt-2">Your final score was: <span id="finalScore" class="font-bold text-white">0</span></p>
+            
+            <!-- NEW, COOLER CREDIT LINE -->
+            <p class="text-sm mt-4 text-emerald-400 font-mono">&gt; A game by Code Artistry &lt;</p> 
+            
+            <p class="text-sm mt-4 text-gray-400">Press the button to play again.</p>
+            <!-- New button inside the modal -->
+            <button id="modalResetButton" class="mt-6 px-5 py-2 bg-emerald-500 text-gray-900 font-semibold rounded-lg shadow-lg hover:bg-emerald-400 transition-colors duration-200 flex items-center gap-2 mx-auto">
+                <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+                <span>Play Again</span>
+            </button>
+            <!-- New Quit button -->
+            <button id="modalQuitButton" class="mt-3 px-5 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-lg hover:bg-gray-500 transition-colors duration-200 flex items-center gap-2 mx-auto">
+                <i data-lucide="x" class="w-4 h-4"></i>
+                <span>Quit</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- NEW: On-Screen D-Pad (Mobile Only) -->
+    <div id="d-pad-container" class="fixed bottom-4 left-4 grid grid-cols-3 grid-rows-3 gap-2 w-36 h-36 md:hidden z-10">
+        <button id="up-btn" class="col-start-2 row-start-1 bg-gray-700/70 rounded-lg text-white flex items-center justify-center active:bg-gray-600 backdrop-blur-sm">
+            <i data-lucide="arrow-up" class="w-8 h-8"></i>
+        </button>
+        <button id="left-btn" class="col-start-1 row-start-2 bg-gray-700/70 rounded-lg text-white flex items-center justify-center active:bg-gray-600 backdrop-blur-sm">
+            <i data-lucide="arrow-left" class="w-8 h-8"></i>
+        </button>
+        <button id="right-btn" class="col-start-3 row-start-2 bg-gray-700/70 rounded-lg text-white flex items-center justify-center active:bg-gray-600 backdrop-blur-sm">
+            <i data-lucide="arrow-right" class="w-8 h-8"></i>
+        </button>
+        <button id="down-btn" class="col-start-2 row-start-3 bg-gray-700/70 rounded-lg text-white flex items-center justify-center active:bg-gray-600 backdrop-blur-sm">
+            <i data-lucide="arrow-down" class="w-8 h-8"></i>
+        </button>
+    </div>
+
+    <!-- Link to the new JavaScript file -->
+    <!-- 'defer' ensures the script runs after the document is parsed -->
+    <script src="script.js" defer></script>
+</body>
+</html>
