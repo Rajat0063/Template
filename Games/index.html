@@ -18,7 +18,7 @@
     <!-- Link to the new CSS file -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="relative min-h-screen flex items-center justify-center bg-gray-900 text-gray-200 p-4">
+<body class="relative min-h-screen flex items-start md:items-center justify-center bg-gray-900 text-gray-200 p-4">
 
     <div class="w-full max-w-md mx-auto" id="gameContainer">
         <!-- Header: Title and Score -->
@@ -48,7 +48,9 @@
             </div>
             
             <!-- This DIV is MODIFIED to be fixed on mobile -->
-            <div class="flex items-center gap-2 md:relative fixed bottom-4 right-4 z-10">
+            <div class="flex items-center gap-2 
+                        md:relative md:left-auto md:bottom-auto md:right-auto md:translate-x-0
+                        fixed bottom-4 left-1/2 translate-x-[0.5rem] z-10">
                 <button id="pauseButton" class="px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-500 transition-colors duration-200 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                     <i data-lucide="pause" class="w-4 h-4"></i>
                     <span id="pauseText">Pause</span>
@@ -63,7 +65,8 @@
     
     <!-- Game Over Modal -->
     <div id="gameOverModal" class="modal absolute inset-0 w-full h-full flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 invisible">
-        <div class="bg-gray-800 p-8 rounded-lg shadow-2xl border border-gray-700 text-center">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-2xl border border-gray-700 text-center
+                    w-full max-w-xs sm:max-w-sm mx-4">
             <h2 class="text-3xl font-bold text-red-500 font-mono">GAME OVER</h2>
             <p class="text-lg mt-2">Your final score was: <span id="finalScore" class="font-bold text-white">0</span></p>
             
@@ -85,7 +88,9 @@
     </div>
 
     <!-- NEW: On-Screen D-Pad (Mobile Only) -->
-    <div id="d-pad-container" class="fixed bottom-4 left-4 grid grid-cols-3 grid-rows-3 gap-2 w-36 h-36 md:hidden z-10">
+    <div id="d-pad-container" 
+        class="fixed bottom-4 left-1/2 -translate-x-[calc(100%+0.5rem)] 
+               grid grid-cols-3 grid-rows-3 gap-2 w-36 h-36 md:hidden z-10">
         <button id="up-btn" class="col-start-2 row-start-1 bg-gray-700/70 rounded-lg text-white flex items-center justify-center active:bg-gray-600 backdrop-blur-sm">
             <i data-lucide="arrow-up" class="w-8 h-8"></i>
         </button>
