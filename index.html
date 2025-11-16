@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Sign Up</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Custom styles for the sliding animation */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Hide scrollbars for animation */
+        }
+        
+        /* Base styles for form containers */
+        .form-container {
+            display: flex; /* This is key to override 'hidden' on desktop */
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transition: all 0.6s ease-in-out;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2.5rem; /* px-10 */
+            text-align: center;
+        }
+
+        .sign-in-container {
+            left: 0;
+            z-index: 2;
+        }
+
+        .sign-up-container {
+            left: 0;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* Base styles for overlay */
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .overlay {
+            background: linear-gradient(to right, #6366F1, #8B5CF6); /* bg-gradient-to-r from-indigo-500 to-purple-500 */
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-panel {
+            position: absolute;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2.5rem; /* px-10 */
+            height: 100%;
+            width: 50%;
+            text-align: center;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        /* --- Animation --- */
+        /* Move Sign-in to the right */
+        .container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        /* Bring Sign-up from the left */
+        .container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        /* Move Overlay-container to the left */
+        .container.right-panel-active .overlay-container {
+            transform: translateX(-100%);
+        }
+
+        /* Move Overlay content */
+        .container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        .container.right-panel-active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .container.right-panel-active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        @keyframes show {
+            0%, 49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+            
+            50%, 100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+
+        /* Helper class for ghost button */
+        .ghost-button {
+            background-color: transparent;
+            border: 1px solid #FFFFFF;
+            color: #FFFFFF;
+        }
+        
+        .ghost-button:hover {
+            background-color: #FFFFFF;
+            color: #6366F1; /* Indigo */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 via-white to-purple-100 flex justify-center items-center min-h-screen py-12 px-4">
+
+    <!-- Container: Max-width for mobile, different max-width and min-height for desktop -->
+    <div id="container" class="container relative bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-4xl min-h-[600px]">
+
+        <!-- Sign Up Form -->
+        <div class="form-container sign-up-container">
+            <!-- Use an ID for the form to attach a submit listener -->
+            <form id="signUpForm" class="w-full">
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Create Account</h1>
+                
+                <!-- Social Icons -->
+                <div class="flex justify-center gap-4 mb-4">
+                    <!-- ... social icons ... -->
+                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                
+                <span class="text-gray-500 text-sm mb-4">or use your email for registration</span>
+                
+                <!-- Add 'name' attributes to get form data -->
+                <input name="name" type="text" placeholder="Name" required class="bg-gray-100 border-none rounded-lg w-full p-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                <input name="email" type="email" placeholder="Email" required class="bg-gray-100 border-none rounded-lg w-full p-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                <input name="password" type="password" placeholder="Password" required minlength="6" class="bg-gray-100 border-none rounded-lg w-full p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                
+                <button type="submit" class="rounded-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-10 uppercase transition-all duration-150 active:scale-95 focus:outline-none">
+                    Sign Up
+                </button>
+            </form>
+        </div>
+
+        <!-- Sign In Form -->
+        <div class="form-container sign-in-container">
+            <!-- Use an ID for the form to attach a submit listener -->
+            <form id="signInForm" class="w-full">
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Sign In</h1>
+                
+                <!-- Social Icons -->
+                <div class="flex justify-center gap-4 mb-4">
+                    <!-- ... social icons ... -->
+                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="h-10 w-10 flex items-center justify-center border border-gray-300 rounded-full text-gray-600 hover:bg-gray-100 transition-all">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                
+                <span class="text-gray-500 text-sm mb-4">or use your account</span>
+                
+                <!-- Add 'name' attributes to get form data -->
+                <input name="email" type="email" placeholder="Email" required class="bg-gray-100 border-none rounded-lg w-full p-3 mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                <input name="password" type="password" placeholder="Password" required class="bg-gray-100 border-none rounded-lg w-full p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                
+                <a href="#" class="text-sm text-gray-500 hover:text-indigo-500 mb-6 transition-all">Forgot your password?</a>
+                
+                <button type="submit" class="rounded-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-10 uppercase transition-all duration-150 active:scale-95 focus:outline-none">
+                    Sign In
+                </button>
+            </form>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay-container">
+            <div class="overlay">
+                
+                <!-- Left Overlay Panel (for Sign In) -->
+                <div class="overlay-panel overlay-left">
+                    <h1 class="text-3xl font-bold mb-4">Welcome Back!</h1>
+                    <p class="text-lg font-light leading-relaxed mb-6 px-6">
+                        To keep connected with us please login with your personal info
+                    </p>
+                    <button id="signIn" class="ghost-button rounded-full font-bold py-3 px-10 uppercase transition-all duration-150 active:scale-95 focus:outline-none">
+                        Sign In
+                    </button>
+                </div>
+                
+                <!-- Right Overlay Panel (for Sign Up) -->
+                <div class="overlay-panel overlay-right">
+                    <h1 class="text-3xl font-bold mb-4">Hello, Friend!</h1>
+                    <p class="text-lg font-light leading-relaxed mb-6 px-6">
+                        Enter your personal details and start your journey with us
+                    </p>
+                    <button id="signUp" class="ghost-button rounded-full font-bold py-3 px-10 uppercase transition-all duration-150 active:scale-95 focus:outline-none">
+                        Sign Up
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- UI Toggle Script & Form Reset Logic -->
+    <script>
+        // --- Get Elements ---
+        const container = document.getElementById('container');
+        
+        // Desktop Buttons
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+
+        // Form Containers
+        const signInContainer = document.querySelector('.sign-in-container');
+        const signUpContainer = document.querySelector('.sign-up-container');
+        
+        // Form Elements
+        const signInForm = document.getElementById('signInForm');
+        const signUpForm = document.getElementById('signUpForm');
+
+        // --- Desktop Listeners (for animation) ---
+        if (signUpButton && signInButton) {
+            signUpButton.addEventListener('click', () => {
+                container.classList.add('right-panel-active');
+            });
+
+            signInButton.addEventListener('click', () => {
+                container.classList.remove('right-panel-active');
+            });
+        }
+        
+        // --- Form Submit Listeners (for demo) ---
+        
+        if (signUpForm) {
+            signUpForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevent page reload
+                console.log('Sign Up form submitted (demo)');
+                
+                // Show a simple alert (as requested implicitly by removing message box)
+                alert('Sign Up Successful! (Demo)'); 
+                
+                signUpForm.reset(); // Clear the form
+                
+                // Switch back to sign-in view
+                container.classList.remove('right-panel-active');
+            });
+        }
+        
+        if (signInForm) {
+            signInForm.addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevent page reload
+                console.log('Sign In form submitted (demo)');
+                
+                // Show a simple alert
+                alert('Sign In Successful! (Demo)'); 
+                
+                signInForm.reset(); // Clear the form
+            });
+        }
+        
+    </script>
+
+</body>
+</html>
