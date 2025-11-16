@@ -20,7 +20,7 @@
 </head>
 <body class="relative min-h-screen flex items-center justify-center bg-gray-900 text-gray-200 p-4">
 
-        <div class="w-full max-w-md mx-auto" id="gameContainer">
+    <div class="w-full max-w-md mx-auto" id="gameContainer">
         <!-- Header: Title and Score -->
         <div class="flex justify-between items-center mb-4 px-2">
             <div>
@@ -43,6 +43,8 @@
                 <p>Use [Arrows] or [WASD]</p>
                 <p>Use [Swipe] or [D-Pad]</p>
                 <p>[Space] to Pause</p>
+                <!-- RE-ADDED CREDIT LINE -->
+                <p class="mt-2 text-emerald-400">&gt; A game by Code Artistry</p>
             </div>
             
             <!-- This DIV is MODIFIED to be fixed on mobile -->
@@ -57,13 +59,6 @@
                 </button>
             </div>
         </div>
-
-        <!-- Credit Line (REMOVED from here) -->
-        <!-- 
-        <div class="text-right text-xs font-mono text-gray-500 mt-4 pr-2">
-            <span>&gt; Made by Code Artistry</span>
-        </div>
-        -->
     </div>
     
     <!-- Game Over Modal -->
@@ -72,8 +67,8 @@
             <h2 class="text-3xl font-bold text-red-500 font-mono">GAME OVER</h2>
             <p class="text-lg mt-2">Your final score was: <span id="finalScore" class="font-bold text-white">0</span></p>
             
-            <!-- NEW, COOLER CREDIT LINE -->
-            <p class="text-sm mt-4 text-emerald-400 font-mono">&gt; A game by Code Artistry &lt;</p> 
+            <!-- CREDIT LINE REMOVED FROM HERE -->
+            <!-- <p class="text-sm mt-4 text-emerald-400 font-mono">&gt; A game by Code Artistry &lt;</p> -->
             
             <p class="text-sm mt-4 text-gray-400">Press the button to play again.</p>
             <!-- New button inside the modal -->
